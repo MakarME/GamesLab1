@@ -3,10 +3,8 @@ using System.Collections.Generic;
 
 namespace GamesDomain.Model;
 
-public partial class Rating
+public partial class Rating : Entity
 {
-    public int Id { get; set; }
-
     public int PlayerId { get; set; }
 
     public int GameId { get; set; }

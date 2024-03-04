@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using GamesDomain.Model;
 using Microsoft.EntityFrameworkCore;
 
-namespace GamesDomain.Model;
+namespace GamesInfrastructure;
 
 public partial class DbgamesContext : DbContext
 {

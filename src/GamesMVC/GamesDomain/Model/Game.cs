@@ -3,10 +3,8 @@ using System.Collections.Generic;
 
 namespace GamesDomain.Model;
 
-public partial class Game
+public partial class Game : Entity
 {
-    public int Id { get; set; }
-
     public int DeveloperId { get; set; }
 
     public string Name { get; set; } = null!;
