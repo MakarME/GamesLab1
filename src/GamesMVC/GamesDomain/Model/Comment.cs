@@ -1,17 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace GamesDomain.Model;
 
 public partial class Comment : Entity
 {
+    [Display(Name="Player")]
     public int PlayerId { get; set; }
-
+    [Display(Name = "Game")]
     public int GameId { get; set; }
-
+    [Display(Name = "Your comment")]
     public string? Text { get; set; }
 
-    public byte[] CommentDate { get; set; } = null!;
+    public DateTime CommentDate { get; set; }
 
     public virtual Game Game { get; set; } = null!;
 
