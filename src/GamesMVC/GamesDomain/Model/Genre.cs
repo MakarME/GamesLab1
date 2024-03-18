@@ -6,7 +6,7 @@ namespace GamesDomain.Model;
 
 public partial class Genre : Entity
 {
-    [Required(ErrorMessage = "THis field must not be empty")]
+    [Required(ErrorMessage = "This field must not be empty")]
     [Display(Name="Genre")]
     public string Name { get; set; } = null!;
 

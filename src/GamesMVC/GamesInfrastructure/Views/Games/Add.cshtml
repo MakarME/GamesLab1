@@ -1,0 +1,41 @@
+﻿@model List<GamesDomain.Model.Game>
+
+@{
+    ViewData["Title"] = "Add";
+}
+
+<h1>Adding game to genre @ViewBag.GenreName</h1>
+
+<h4>Game</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Add">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" name="GenreId" value="@ViewBag.GenreId" />
+            <div class="form-group">
+                <label for="selectedGame" class="control-label">Select a game</label>
+                <select id="selectedGame" class="form-control" name="game.Id" required>
+                    @foreach (var game in Model)
+                    {
+                        <option value="@game.Id">@game.Name</option>
+                    }
+                </select>
+            </div>
+            <input type="hidden" name="DeveloperId" value="@Model.FirstOrDefault()?.DeveloperId" />
+            <input type="hidden" name="game.Name" value="@Model.FirstOrDefault()?.Name" />
+            <input type="hidden" name="game.ReleaseDate" value="@Model.FirstOrDefault()?.ReleaseDate" />
+            <input type="submit" value="Add" class="btn btn-primary" />
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-controller="Games" asp-action="Index" asp-route-id="@ViewBag.GenreId" asp-route-name="@ViewBag.GenreName">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

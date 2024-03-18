@@ -10,65 +10,62 @@ using GamesInfrastructure;
 
 namespace GamesInfrastructure.Controllers
 {
-    public class GenresController : Controller
+    public class DevelopersController : Controller
     {
         private readonly DbgamesContext _context;
 
-        public GenresController(DbgamesContext context)
+        public DevelopersController(DbgamesContext context)
         {
             _context = context;
         }
 
-        // GET: Genres
+        // GET: Developers
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Genres.ToListAsync());
+            return View(await _context.Developers.ToListAsync());
         }
 
-        // GET: Genres/Details/5
+        // GET: Developers/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
-            ViewBag.GenreId = id;
 
-            var genre = await _context.Genres
+            var developer = await _context.Developers
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (genre == null)
+            if (developer == null)
             {
                 return NotFound();
             }
-            ViewBag.GenreName = genre.Name;
 
-            //return View(genre);
-            return RedirectToAction("Index", "Games", new {id = genre.Id, name = genre.Name});
+            return View(developer);
         }
 
-        // GET: Genres/Create
+        // GET: Developers/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Genres/Create
+        // POST: Developers/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Info,Id")] Genre genre)
+        public async Task<IActionResult> Create([Bind("Name,Id")] Developer developer)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(genre);
+                _context.Add(developer);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(genre);
+            return View(developer);
         }
 
-        // GET: Genres/Edit/5
+        // GET: Developers/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -76,22 +73,22 @@ namespace GamesInfrastructure.Controllers
                 return NotFound();
             }
 
-            var genre = await _context.Genres.FindAsync(id);
-            if (genre == null)
+            var developer = await _context.Developers.FindAsync(id);
+            if (developer == null)
             {
                 return NotFound();
             }
-            return View(genre);
+            return View(developer);
         }
 
-        // POST: Genres/Edit/5
+        // POST: Developers/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Name,Info,Id")] Genre genre)
+        public async Task<IActionResult> Edit(int id, [Bind("Name,Id")] Developer developer)
         {
-            if (id != genre.Id)
+            if (id != developer.Id)
             {
                 return NotFound();
             }
@@ -100,12 +97,12 @@ namespace GamesInfrastructure.Controllers
             {
                 try
                 {
-                    _context.Update(genre);
+                    _context.Update(developer);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!GenreExists(genre.Id))
+                    if (!DeveloperExists(developer.Id))
                     {
                         return NotFound();
                     }
@@ -116,10 +113,10 @@ namespace GamesInfrastructure.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(genre);
+            return View(developer);
         }
 
-        // GET: Genres/Delete/5
+        // GET: Developers/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -127,34 +124,34 @@ namespace GamesInfrastructure.Controllers
                 return NotFound();
             }
 
-            var genre = await _context.Genres
+            var developer = await _context.Developers
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (genre == null)
+            if (developer == null)
             {
                 return NotFound();
             }
 
-            return View(genre);
+            return View(developer);
         }
 
-        // POST: Genres/Delete/5
+        // POST: Developers/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var genre = await _context.Genres.FindAsync(id);
-            if (genre != null)
+            var developer = await _context.Developers.FindAsync(id);
+            if (developer != null)
             {
-                _context.Genres.Remove(genre);
+                _context.Developers.Remove(developer);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool GenreExists(int id)
+        private bool DeveloperExists(int id)
         {
-            return _context.Genres.Any(e => e.Id == id);
+            return _context.Developers.Any(e => e.Id == id);
         }
     }
 }

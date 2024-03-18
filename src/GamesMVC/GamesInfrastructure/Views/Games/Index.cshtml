@@ -1,13 +1,16 @@
 ﻿@model IEnumerable<GamesDomain.Model.Game>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Games by genre";
 }
 
-<h1>Index</h1>
+<h1>Games by genre @ViewBag.GenreName</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    @Html.ActionLink("Add new game", "Create", new {genreId = ViewBag.GenreId})
+</p>
+<p>
+    @Html.ActionLink("Add existing game", "Add", new { genreId = ViewBag.GenreId })
 </p>
 <table class="table">
     <thead>
@@ -37,9 +40,9 @@
                 @Html.DisplayFor(modelItem => item.Developer.Name)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    <a asp-action="Edit" asp-route-id="@item.Id" asp-route-GenreId="@ViewBag.GenreId" asp-route-GenreName="@ViewBag.GenreName">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id" asp-route-GenreId="@ViewBag.GenreId" asp-route-GenreName="@ViewBag.GenreName">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id" asp-route-GenreId="@ViewBag.GenreId" asp-route-GenreName="@ViewBag.GenreName">Delete</a>
             </td>
         </tr>
 }
