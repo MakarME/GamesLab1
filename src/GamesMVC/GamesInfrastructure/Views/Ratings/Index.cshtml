@@ -28,26 +28,57 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Rating1)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RatingDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Game.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Player.Email)
-            </td>
-            <td>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Rating1)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RatingDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Game.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Player.Email)
+                </td>
+                <td>
                     <a asp-action="Edit" asp-route-id="@item.Id" asp-route-GameId="@item.GameId" asp-route-PlayerId="@item.PlayerId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+
+<div id="chart_div"></div>
+@section Scripts {
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load('current', { 'packages': ['corechart'] });
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+            $.getJSON('/api/Charts/getAverageRatingPerGame', function (data) {
+                var chartData = [['Game', 'Average Rating']];
+
+                data.forEach(function (item) {
+                    chartData.push([item.gameName, item.averageRating]);
+                });
+
+                var dataTable = google.visualization.arrayToDataTable(chartData);
+
+                var options = {
+                    title: 'Average Rating per Game',
+                    legend: { position: 'none' }
+                };
+
+                var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+                chart.draw(dataTable, options);
+            });
+        }
+    </script>
+}
+

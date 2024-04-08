@@ -1,0 +1,13 @@
+﻿<div>
+    <h3>Choose EXCEL file to upload</h3>
+    @using (Html.BeginForm("Import", "Genres", FormMethod.Post, new { enctype = "multipart/form-data", id = "frm-excel" }))
+    {
+        <div>
+            Upload EXCEL-file:
+            <input type="file" name="fileExcel" id="fileExcel" />
+            <div>
+                <input type="submit" value="Upload" />
+            </div>
+        </div>
+    }
+</div>

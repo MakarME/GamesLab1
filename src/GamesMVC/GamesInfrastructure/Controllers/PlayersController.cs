@@ -142,6 +142,12 @@ namespace GamesInfrastructure.Controllers
             var player = await _context.Players.FindAsync(id);
             if (player != null)
             {
+                var playerComments = _context.Comments.Where(c => c.PlayerId == id);
+                _context.Comments.RemoveRange(playerComments);
+
+                var playerRatings = _context.Ratings.Where(c => c.PlayerId == id);
+                _context.Ratings.RemoveRange(playerRatings);
+
                 _context.Players.Remove(player);
             }
 

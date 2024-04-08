@@ -10,7 +10,7 @@ public partial class Comment : Entity
     public int PlayerId { get; set; }
     [Display(Name = "Game")]
     public int GameId { get; set; }
-    [Display(Name = "Your comment")]
+    [Display(Name = "Comment")]
     public string? Text { get; set; }
 
     public DateTime CommentDate { get; set; }

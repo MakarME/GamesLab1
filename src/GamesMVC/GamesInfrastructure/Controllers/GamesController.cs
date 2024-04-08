@@ -71,20 +71,33 @@ namespace GamesInfrastructure.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(int genreId, int DeveloperId, Game game)
         {
-            var developer = _context.Developers.Where(d => d.Id == DeveloperId).FirstOrDefault();
+            var existingGame = _context.Games.FirstOrDefault(g => g.Name.Trim() == game.Name.Trim() && g.ReleaseDate == game.ReleaseDate);
+            if (existingGame != null)
+            {
+                ModelState.AddModelError("Name", "Game with this name and release date already exists.");
+                ViewData["DeveloperId"] = new SelectList(_context.Developers, "Id", "Name");
+                ViewBag.DeveloperId = new SelectList(_context.Developers, "Id", "Name");
+                var genre1 = _context.Genres.FirstOrDefault(g => g.Id == genreId);
+                ViewBag.GenreName = genre1.Name;
+                ViewBag.GenreId = genreId;
+                return View();
+            }
+
+            var developer = _context.Developers.FirstOrDefault(d => d.Id == DeveloperId);
             game.DeveloperId = DeveloperId;
             game.Developer = developer;
 
-            var genre =  _context.Genres.Where(g => g.Id == genreId).FirstOrDefault();
+            var genre = _context.Genres.FirstOrDefault(g => g.Id == genreId);
             game.Genres.Add(genre);
+
             ModelState.Clear();
             TryValidateModel(game);
-            
+
             if (ModelState.IsValid)
             {
                 _context.Add(game);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Index", "Games", new {id = genreId, name = genre.Name});
+                return RedirectToAction("Index", "Games", new { id = genreId, name = genre.Name });
             }
 
             return View();
@@ -167,6 +180,18 @@ namespace GamesInfrastructure.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, int GenreId, string GenreName, [Bind("Id","DeveloperId","Name","ReleaseDate","GenreId")]Game game)
         {
+            var existingGame = _context.Games.FirstOrDefault(g => g.Name.Trim() == game.Name.Trim() && g.ReleaseDate == game.ReleaseDate);
+            if (existingGame != null)
+            {
+                ModelState.AddModelError("Name", "Game with this name and release date already exists.");
+                ViewData["DeveloperId"] = new SelectList(_context.Developers, "Id", "Name");
+                ViewBag.DeveloperId = new SelectList(_context.Developers, "Id", "Name");
+                var genre1 = _context.Genres.FirstOrDefault(g => g.Id == GenreId);
+                ViewBag.GenreName = genre1.Name;
+                ViewBag.GenreId = GenreId;
+                return View();
+            }
+
             var developer = await _context.Developers.Where(d => d.Id == game.DeveloperId).FirstOrDefaultAsync();
             game.Developer = developer;
             ModelState.Clear();
@@ -227,10 +252,18 @@ namespace GamesInfrastructure.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id, int GenreId, string GenreName)
         {
-            var game = await _context.Games.Include(g => g.Genres).FirstOrDefaultAsync(g => g.Id == id);
+            var game = await _context.Games
+                .Include(g => g.Genres)
+                .Include(g => g.Comments)
+                .Include(g => g.Ratings)
+                .FirstOrDefaultAsync(g => g.Id == id);
 
             if (game != null)
             {
+                _context.Comments.RemoveRange(game.Comments);
+
+                _context.Ratings.RemoveRange(game.Ratings);
+
                 foreach (var genre in game.Genres)
                 {
                     genre.Games.Remove(game);
@@ -240,6 +273,7 @@ namespace GamesInfrastructure.Controllers
 
                 await _context.SaveChangesAsync();
             }
+
             return RedirectToAction("Index", "Games", new { id = GenreId, name = GenreName });
         }
 

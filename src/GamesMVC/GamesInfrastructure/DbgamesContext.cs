@@ -36,9 +36,7 @@ public partial class DbgamesContext : DbContext
         modelBuilder.Entity<Comment>(entity =>
         {
             entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.CommentDate)
-                .IsRowVersion()
-                .IsConcurrencyToken();
+            entity.Property(e => e.CommentDate).HasColumnType("datetime");
             entity.Property(e => e.Text).HasColumnType("text");
 
             entity.HasOne(d => d.Game).WithMany(p => p.Comments)

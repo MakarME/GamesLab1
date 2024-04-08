@@ -1,5 +1,6 @@
 using GamesDomain.Model;
 using GamesInfrastructure;
+using GamesInfrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +12,7 @@ builder.Services.AddDbContext<DbgamesContext>(option => option.UseSqlServer(
     builder.Configuration.GetConnectionString("DefaultConnection")
     ));
 
+builder.Services.AddScoped<GenreDataPortServiceFactory>();
 
 var app = builder.Build();
 
